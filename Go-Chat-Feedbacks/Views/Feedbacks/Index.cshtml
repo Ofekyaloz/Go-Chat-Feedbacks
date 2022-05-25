@@ -1,0 +1,88 @@
+﻿@model IEnumerable<Go_Chat_Feedbacks.Models.Feedback>
+
+@{
+    ViewData["Title"] = "Index";
+}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+
+<div class="message">
+    Like our website? Come and rate us, <a asp-action="Create">Click right here!</a>
+</div>
+
+<div>
+    <form asp-action="Search">
+        <input name="query" id="search" placeholder="Search a Feedback/User" maxlength=20 autoComplete="off"/>
+        <input type="submit" value="Search"  class="btn btn-danger">
+    </form>
+</div>
+
+@{
+    int rate = 0, amount = Model.Count(), sum = 0;
+    foreach(Feedback f in Model)
+    {
+        sum+= f.Value;
+    }
+    if (amount > 0)
+        rate = sum / amount;
+}
+
+<p class="rate">
+    Our Rate is: @rate stars! <br /> @{
+        int i;
+        for(i =0; i < rate; ++i)
+        {
+            <img class="stars" src=~/star.png></img>
+        }
+        for(;i < 5; i++)
+        {
+            <img class="stars" src=~/empty_star.png></img>
+        }
+    }
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Username)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Value)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Content)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Date)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Username)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Value)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Content)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Date)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.ID" class="btn btn-primary">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.ID" class="btn btn-warning">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.ID" class="btn btn-danger">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+@section Scripts {
+    <script src="~/js/Search.js"></script>
+}
